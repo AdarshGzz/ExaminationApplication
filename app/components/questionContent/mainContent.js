@@ -14,6 +14,7 @@ const mainContent = ({section,qIndex,selectedOption,setSelectedOption,userRespon
    };
 // 
   let optionArray = section[qIndex].options;
+  console.log(optionArray);
   let options = [];
   for (let option in optionArray) {
     options.push(optionArray[option]);
@@ -68,6 +69,7 @@ const mainContent = ({section,qIndex,selectedOption,setSelectedOption,userRespon
                     checked={selectedOption === option}
                     onChange={() => handleOptionClick(option)}
                   />
+                  <label className='p-1'></label>
                   {option}
                 </div>
               ))}

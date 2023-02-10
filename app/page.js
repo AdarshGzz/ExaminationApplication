@@ -1,10 +1,10 @@
 "use client";
 import Tabsection from "./components/Tabsection";
-import {useState} from 'react'
+
 
 export default function Home() {
 
-  const[timer,setTimer] = useState('')
+
   
   return (
     <div>
@@ -17,7 +17,7 @@ export default function Home() {
       
       {/* footer */}
       <div>
-        <div className="bg-cyan-800 mt-1 h-8 flex flex-row justify-center items-center">
+        <div className="bg-cyan-800 mt-9 h-8 flex flex-row justify-center items-center">
           <p className=" text-white font-extrabold">
             <a
               className="no-underline hover:text-black"

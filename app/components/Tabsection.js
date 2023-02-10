@@ -13,16 +13,10 @@ const Tabsection = () => {
   const [reviews, setReviews] = useState([]);
   const [dumps, setDumps] = useState([]);
 
-  // const [answered, setAnswered] = useState(null);
-  // const [notAnswered, setNotAnswered] = useState(null);
-  // const [dump, setDump] = useState(null);
-  // const [reviewAns, setReviewAns] = useState(null);
-  // const [reviewNotAns, setReviewNotAns] = useState(null);
-
   const buttonStyle =
     "btn btn-primary border border-white hover:border-black bg-blue-400 w-[150px] p-1 text-white font-medium rounded hover:bg-blue-600 uppercase ";
 
-  const colStyle = "text-black font-bold border cursor-pointer border-black";
+  const colStyle = "text-black font-bold border border-black";
 
   const activeBtn =
     "btn btn-primary border border-black bg-blue-600 w-[150px] p-1 text-white font-medium rounded uppercase";
@@ -74,7 +68,6 @@ const Tabsection = () => {
       setqIndex(qIndex - 1);
     }
   };
-  // console.log(response)
   //
   const handleReviewClick = () => {
     if (!selectedOption) {
@@ -87,6 +80,7 @@ const Tabsection = () => {
       setUserResponses(updatedResponses);
     }
   };
+
   console.log("reviews" + reviews);
   //
    const handleDumpClick = () => {
@@ -94,12 +88,9 @@ const Tabsection = () => {
      updatedDumps.push(qIndex);
      setDumps(updatedDumps);
    };
+
    console.log("dumps :"+dumps)
   // 
-  const handleColClick = (col) => {
-    setqIndex(col);
-    // console.log(col)
-  };
 
    const handleClearClick = () => {
      setSelectedOption("");
@@ -125,18 +116,30 @@ const Tabsection = () => {
             <div className=" grid-container grid p-1 grid-cols-4">
               {Object.entries(section).map(([index, currentSection]) => (
                 <div
-                  className={`${colStyle} `}
-                  onClick={() => handleColClick(index)}
-                  key={index}
-                  style={{
-                    backgroundColor: userResponses[index]
-                      ? "rgb(74,222,128)"
+                  // className={`${colStyle}`}
+                  className={`${colStyle} ${
+                    userResponses[index] === "review"
+                      ? "bg-purple-400"
+                      : userResponses[index]
+                      ? "bg-green-400"
                       : reviews.includes(index)
-                      ? "rgb(250 204 21 )"
+                      ? "bg-yellow-400"
                       : dumps.includes(index)
-                      ? "rgb(156 163 175)"
-                      : "white",
-                  }}
+                      ? "bg-red-400"
+                      : ""
+                  }`}
+                  key={index}
+                  // style={{
+                  //   backgroundColor: userResponses[index]
+                  //     ? userResponses[index] === "review"
+                  //       ? "purple"
+                  //       : "green"
+                  //     : dumps.includes(index)
+                  //     ? "red"
+                  //     : reviews.includes(index)
+                  //     ? "yellow"
+                  //     : "",
+                  // }}
                 >
                   {currentSection.queNo}
                 </div>
