@@ -1,7 +1,10 @@
 "use client";
 import Tabsection from "./components/Tabsection";
+import {useState} from 'react'
 
 export default function Home() {
+
+  const[timer,setTimer] = useState('')
   
   return (
     <div>

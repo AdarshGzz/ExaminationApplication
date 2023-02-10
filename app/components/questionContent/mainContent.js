@@ -1,31 +1,23 @@
 import React from 'react'
 import QuestionDiscription from './questionDiscription';
-import { useState } from "react";
 
 
 
-const mainContent = ({section,qIndex,selectedOption, setSelectedOption,response}) => {
+const mainContent = ({section,qIndex,selectedOption,setSelectedOption,userResponses,setUserResponses}) => {
 // 
-  // let currentQue = section[qIndex].queNo
-  // let userAnswer = ["false"];
-  // // for (let j = 0; j < section.length+1; j++) {
-  // //   userAnswer.push(selectedOption);
-  // // }
-  // userAnswer.push(selectedOption);
-  // // userAnswer[currentQue] = selectedOption
-  // console.log(userAnswer);
+
+   let handleOptionClick = (option) => {
+     setSelectedOption(option);
+     let updatedResponses = { ...userResponses };
+     updatedResponses[qIndex] = option;
+     setUserResponses(updatedResponses);
+   };
 // 
   let optionArray = section[qIndex].options;
   let options = [];
   for (let option in optionArray) {
     options.push(optionArray[option]);
   }
-
-   const handleSelectedOption = (e) => {
-     setSelectedOption(e.target.value);
-   };
-  // // 
-  
 
   return (
     <div className="w-[74%] h-full pl-4 ">
@@ -67,23 +59,16 @@ const mainContent = ({section,qIndex,selectedOption, setSelectedOption,response}
             </div>
             <div className="flex flex-col mt-[40px]  gap-5 p-1 ">
               {Object.entries(options).map(([index, option]) => (
-                <div className="form-check p-1 pl-3 ">
+                <div className="form-check p-1 pl-3 " key={index}>
                   <hr className="p-1"></hr>
                   <input
-                    className="form-check-input"
                     type="radio"
+                    name="option"
                     value={option}
                     checked={selectedOption === option}
-                    name="flexRadioDefault"
-                    id={`flexRadioDefaul${index}`}
-                    onChange={handleSelectedOption}
+                    onChange={() => handleOptionClick(option)}
                   />
-                  <label
-                    className="form-check-label pl-4"
-                    for={`flexRadioDefaul${index}`}
-                  >
-                    {`${option}`}
-                  </label> 
+                  {option}
                 </div>
               ))}
             </div>

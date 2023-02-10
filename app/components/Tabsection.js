@@ -5,18 +5,19 @@ import StudentDetails from "./Aside/studentDetails";
 import QuestionStatus from "./Aside/QuestionStatus";
 
 const Tabsection = () => {
-  const [section, setSection] = useState("allque");
-  const [value, setvalue] = useState("allque");
+  const [section, setSection] = useState([""]);
   const [qIndex, setqIndex] = useState(0);
-  const [response,setResponse] = useState('');
-  const [selectedOption, setSelectedOption] = useState(Array(section.length).fill(null));
+  const [activeTab, setActiveTab] = useState("allque");
+  const [selectedOption, setSelectedOption] = useState("");
+  const [userResponses, setUserResponses] = useState({});
+  const [reviews, setReviews] = useState([]);
+  const [dumps, setDumps] = useState([]);
 
-  const[answered,setAnswered] = useState(null)
-  const[notAnswered, setNotAnswered] = useState(null)
-  const[dump,setDump] = useState(null)
-  const[reviewAns,setReviewAns] = useState(null)
-  const[reviewNotAns,setReviewNotAns] = useState(null)
-
+  // const [answered, setAnswered] = useState(null);
+  // const [notAnswered, setNotAnswered] = useState(null);
+  // const [dump, setDump] = useState(null);
+  // const [reviewAns, setReviewAns] = useState(null);
+  // const [reviewNotAns, setReviewNotAns] = useState(null);
 
   const buttonStyle =
     "btn btn-primary border border-white hover:border-black bg-blue-400 w-[150px] p-1 text-white font-medium rounded hover:bg-blue-600 uppercase ";
@@ -32,91 +33,84 @@ const Tabsection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5400/${value}/`, {
+        const response = await fetch(`http://localhost:5400/allque/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         });
         const Data = await response.json();
+        console.log("data" + Data);
         setSection(Data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, [value]);
+  }, []);
+
+  console.log("sec" + section);
 
   const handleAllQue = (sec) => {
-    setvalue(sec);
-    setqIndex(0)
+    if (sec === "phyque") {
+      setActiveTab("phyque");
+      setqIndex(0);
+    } else if (sec === "chemque") {
+      setqIndex(3);
+      setActiveTab("chemque");
+    } else if (sec === "mathsque") {
+      setqIndex(6);
+      setActiveTab("mathsque");
+    } else {
+      setqIndex(0);
+      setActiveTab("allque");
+    }
   };
 
-  const handleResponse =(res)=>{
-    if(res==='next'){
-      setqIndex(qIndex+1)
-      if(selectedOption!=null){
-        setAnswered(true);
-      }else{
-        setNotAnswered(true)
-      }
+  const handleResponse = (res) => {
+    if (res === "next") {
+      setqIndex(qIndex + 1);
+    } else if (res === "prev") {
+      setqIndex(qIndex - 1);
     }
-    else if(res==='prev'){
-      setqIndex(qIndex-1);
-      if(selectedOption!=null){
-        setAnswered(true);
-      }else{
-        setNotAnswered(true);
-      }
-    }
-    else if(res==='dump'){
-      setSelectedOption(null)
-      setqIndex(qIndex+1)
-      setDump(true)
-    }
-    else if(res==='review'){
-      if(setSelectedOption!=null){
-        setReviewAns(true)
-      }
-      else{
-        setReviewNotAns(true)
-      }
-    }
-    setResponse(res)
-  }
+  };
   // console.log(response)
-  let colColor = 'bg-white-400'
-  if(answered){
-    colColor = 'bg-green-400'
-  }
-  else if(notAnswered){
-    colColor = 'bg-red-400'
-  }
-  else if(dump){
-    colColor = 'bg-gray-400'
-  }
-  else if(reviewAns){
-    colColor = 'bg-purple-400'
-  }
-  else if(reviewNotAns){
-    colColor = 'bg-yellow-400'
-  }
-
-  
-  
-  const handleColClick = (col) =>{
-    setqIndex(col)
+  //
+  const handleReviewClick = () => {
+    if (!selectedOption) {
+      let updatedReviews = [...reviews];
+      updatedReviews.push(qIndex);
+      setReviews(updatedReviews);
+    } else {
+      let updatedResponses = { ...userResponses };
+      updatedResponses[qIndex] = "review";
+      setUserResponses(updatedResponses);
+    }
+  };
+  console.log("reviews" + reviews);
+  //
+   const handleDumpClick = () => {
+     let updatedDumps = [...dumps];
+     updatedDumps.push(qIndex);
+     setDumps(updatedDumps);
+   };
+   console.log("dumps :"+dumps)
+  // 
+  const handleColClick = (col) => {
+    setqIndex(col);
     // console.log(col)
-  }
-  
-  const handleClearResponse=()=>{
-    setSelectedOption(null)
-  }
-  console.log(selectedOption)
- 
-  // console.log(qIndex)
+  };
 
-  
+   const handleClearClick = () => {
+     setSelectedOption("");
+     let updatedResponses = { ...userResponses };
+     updatedResponses[qIndex] = "";
+     setUserResponses(updatedResponses);
+   };
+  console.log(selectedOption);
+  console.log("userResponses : "+userResponses)
+
+  // console.log(qIndex)
 
   return (
     <div>
@@ -131,9 +125,18 @@ const Tabsection = () => {
             <div className=" grid-container grid p-1 grid-cols-4">
               {Object.entries(section).map(([index, currentSection]) => (
                 <div
-                  className={`${colStyle} ${colColor}`}
+                  className={`${colStyle} `}
                   onClick={() => handleColClick(index)}
                   key={index}
+                  style={{
+                    backgroundColor: userResponses[index]
+                      ? "rgb(74,222,128)"
+                      : reviews.includes(index)
+                      ? "rgb(250 204 21 )"
+                      : dumps.includes(index)
+                      ? "rgb(156 163 175)"
+                      : "white",
+                  }}
                 >
                   {currentSection.queNo}
                 </div>
@@ -148,28 +151,32 @@ const Tabsection = () => {
         <button
           type="button"
           onClick={() => handleAllQue("allque")}
-          className={value === "allque" ? `${activeBtn}` : `${buttonStyle}`}
+          className={activeTab === "allque" ? `${activeBtn}` : `${buttonStyle}`}
         >
           ALL SECTIONS
         </button>
         <button
           type="button"
           onClick={() => handleAllQue("phyque")}
-          className={value === "phyque" ? `${activeBtn}` : `${buttonStyle}`}
+          className={activeTab === "phyque" ? `${activeBtn}` : `${buttonStyle}`}
         >
           PHYSICS
         </button>
         <button
           type="button"
           onClick={() => handleAllQue("chemque")}
-          className={value === "chemque" ? `${activeBtn}` : `${buttonStyle}`}
+          className={
+            activeTab === "chemque" ? `${activeBtn}` : `${buttonStyle}`
+          }
         >
           CHEMISTRY
         </button>
         <button
           type="button"
           onClick={() => handleAllQue("mathsque")}
-          className={value === "mathsque" ? `${activeBtn}` : `${buttonStyle}`}
+          className={
+            activeTab === "mathsque" ? `${activeBtn}` : `${buttonStyle}`
+          }
         >
           MATHS
         </button>
@@ -180,28 +187,29 @@ const Tabsection = () => {
           qIndex={qIndex}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
-          response={response}
+          userResponses={userResponses}
+          setUserResponses={setUserResponses}
         />
       </div>
       <div>
         <div className="p-3 flex flex-row gap-3">
           <button
             type="button"
-            onClick={handleClearResponse}
+            onClick={handleClearClick}
             className={`${buttonStyle} w-[200px]`}
           >
             clear Response
           </button>
           <button
             type="button"
-            onClick={() => handleResponse("review")}
+            onClick={handleReviewClick}
             className={`${buttonStyle} w-[130px]`}
           >
             review
           </button>
           <button
             type="button"
-            onClick={() => handleResponse("dump")}
+            onClick={handleDumpClick}
             className={`${buttonStyle} w-[130px]`}
           >
             dump
