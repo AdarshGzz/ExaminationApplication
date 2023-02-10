@@ -1,17 +1,23 @@
-const mongoose = require('mongoose')
-mongoose.set("strictQuery",false)
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const dotenv = require("dotenv");
+dotenv.config();
+const url = process.env.URL
 
-const QuestionBankSchema = new mongoose.Schema({
-    queNo:Number,
-    subject:String,
-    queDiscription:String,
-    question:String,
-    image:String,
-    options:Array,
-},{
-    versionKey:false
-})
+const client = new MongoClient(`${url}`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+});
+const database = "examApp";
 
-const QueBank = mongoose.model(`QuestionBank`,QuestionBankSchema)
+const pool = async (res, req) => {
+  try {
+    let result = await client.connect();
+    let db = result.db(database);
+    return db.collection("questionBank");
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-module.exports = QueBank
+module.exports = pool;

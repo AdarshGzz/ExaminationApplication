@@ -3,6 +3,7 @@ import { useState } from "react";
 import MainContent from "./questionContent/mainContent";
 import StudentDetails from "./Aside/studentDetails";
 import QuestionStatus from "./Aside/QuestionStatus";
+import QuestionPallet from "./Aside/QuestionPallet";
 
 const Tabsection = () => {
   const [section, setSection] = useState([""]);
@@ -15,8 +16,6 @@ const Tabsection = () => {
 
   const buttonStyle =
     "btn btn-primary border border-white hover:border-black bg-blue-400 w-[150px] p-1 text-white font-medium rounded hover:bg-blue-600 uppercase ";
-
-  const colStyle = "text-black font-bold border border-black";
 
   const activeBtn =
     "btn btn-primary border border-black bg-blue-600 w-[150px] p-1 text-white font-medium rounded uppercase";
@@ -83,72 +82,45 @@ const Tabsection = () => {
 
   console.log("reviews" + reviews);
   //
-   const handleDumpClick = () => {
-     let updatedDumps = [...dumps];
-     updatedDumps.push(qIndex);
-     setDumps(updatedDumps);
-   };
+  const handleDumpClick = () => {
+    let updatedDumps = [...dumps];
+    updatedDumps.push(qIndex);
+    setDumps(updatedDumps);
+  };
 
-   console.log("dumps :"+dumps)
-  // 
+  console.log("dumps :" + dumps);
+  //
 
-   const handleClearClick = () => {
-     setSelectedOption("");
-     let updatedResponses = { ...userResponses };
-     updatedResponses[qIndex] = "";
-     setUserResponses(updatedResponses);
-   };
+  const handleClearClick = () => {
+    setSelectedOption("");
+    let updatedResponses = { ...userResponses };
+    updatedResponses[qIndex] = "";
+    setUserResponses(updatedResponses);
+  };
   console.log(selectedOption);
-  console.log("userResponses : "+userResponses)
+  console.log("userResponses : " + userResponses);
 
   // console.log(qIndex)
 
   return (
     <div>
       <aside className="h-[89%] absolute w-[25rem] flex flex-col pt-1 ml-[68rem] mt-[5px] pr-3">
-        <StudentDetails />
+        <StudentDetails/>
         {/* question pallet */}
-        <div className=" bg-slate-50 relative flex flex-col overflow-hidden h-[15rem] rounded-md  border-2 mt-1 border-black w-[90%]">
-          <div className="h-7 w-full pl-1 uppercase font-bold bg-blue-400">
-            <p>Question pallet</p>
-          </div>
-          <div className="container text-center ">
-            <div className=" grid-container grid p-1 grid-cols-4">
-              {Object.entries(section).map(([index, currentSection]) => (
-                <div
-                  // className={`${colStyle}`}
-                  className={`${colStyle} ${
-                    userResponses[index] === "review"
-                      ? "bg-purple-400"
-                      : userResponses[index]
-                      ? "bg-green-400"
-                      : reviews.includes(index)
-                      ? "bg-yellow-400"
-                      : dumps.includes(index)
-                      ? "bg-red-400"
-                      : ""
-                  }`}
-                  key={index}
-                  // style={{
-                  //   backgroundColor: userResponses[index]
-                  //     ? userResponses[index] === "review"
-                  //       ? "purple"
-                  //       : "green"
-                  //     : dumps.includes(index)
-                  //     ? "red"
-                  //     : reviews.includes(index)
-                  //     ? "yellow"
-                  //     : "",
-                  // }}
-                >
-                  {currentSection.queNo}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <QuestionPallet
+          section={section}
+          qIndex={qIndex}
+          selectedOption={selectedOption}
+          userResponses={userResponses}
+          reviews={reviews}
+          dumps={dumps}
+        />
         {/* question pallet end */}
-        <QuestionStatus />
+        <QuestionStatus
+        userResponses={userResponses}
+          reviews={reviews}
+          dumps={dumps}
+         />
       </aside>
       <div className="p-3 flex flex-row gap-3">
         <button
@@ -195,7 +167,7 @@ const Tabsection = () => {
         />
       </div>
       <div>
-        <div className="p-3 flex flex-row gap-3">
+        <div className="p-3 pb-11  flex flex-row gap-3">
           <button
             type="button"
             onClick={handleClearClick}
