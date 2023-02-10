@@ -5,26 +5,24 @@ import { useState } from "react";
 
 
 const mainContent = ({section,qIndex,selectedOption, setSelectedOption,response}) => {
-
+// 
+  // let currentQue = section[qIndex].queNo
+  // let userAnswer = ["false"];
+  // // for (let j = 0; j < section.length+1; j++) {
+  // //   userAnswer.push(selectedOption);
+  // // }
+  // userAnswer.push(selectedOption);
+  // // userAnswer[currentQue] = selectedOption
+  // console.log(userAnswer);
+// 
   let optionArray = section[qIndex].options;
   let options = [];
   for (let option in optionArray) {
     options.push(optionArray[option]);
   }
 
-  // 
-  const currentQue = section[qIndex].queNo
-
-  const selectedData = {
-    queNo: section[qIndex].queNo,
-    selection: selectedOption
-  };
-  const selectedDataArray = [];
-     selectedDataArray[currentQue] = selectedData; 
-     console.log(selectedDataArray)
-
    const handleSelectedOption = (e) => {
-    setSelectedOption(e.target.value);
+     setSelectedOption(e.target.value);
    };
   // // 
   

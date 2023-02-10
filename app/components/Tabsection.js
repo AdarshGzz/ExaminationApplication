@@ -9,7 +9,7 @@ const Tabsection = () => {
   const [value, setvalue] = useState("allque");
   const [qIndex, setqIndex] = useState(0);
   const [response,setResponse] = useState('');
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(Array(section.length).fill(null));
 
   const[answered,setAnswered] = useState(null)
   const[notAnswered, setNotAnswered] = useState(null)
@@ -22,17 +22,6 @@ const Tabsection = () => {
     "btn btn-primary border border-white hover:border-black bg-blue-400 w-[150px] p-1 text-white font-medium rounded hover:bg-blue-600 uppercase ";
 
   const colStyle = "text-black font-bold border cursor-pointer border-black";
-
-  const greenColStyle =
-    "text-black font-bold border cursor-pointer  bg-green-400  border-black";
-  const redColStyle =
-    "text-black font-bold border cursor-pointer  bg-red-400  border-black";
-  const purpleColStyle =
-    "text-black font-bold border cursor-pointer  bg-purple-400  border-black";
-  const yellowColStyle =
-    "text-black font-bold border cursor-pointer  bg-yellow-400  border-black";
-  const grayColStyle =
-    "text-black font-bold border cursor-pointer  bg-gray-400  border-black";
 
   const activeBtn =
     "btn btn-primary border border-black bg-blue-600 w-[150px] p-1 text-white font-medium rounded uppercase";
@@ -66,17 +55,53 @@ const Tabsection = () => {
   const handleResponse =(res)=>{
     if(res==='next'){
       setqIndex(qIndex+1)
+      if(selectedOption!=null){
+        setAnswered(true);
+      }else{
+        setNotAnswered(true)
+      }
     }
     else if(res==='prev'){
       setqIndex(qIndex-1);
+      if(selectedOption!=null){
+        setAnswered(true);
+      }else{
+        setNotAnswered(true);
+      }
     }
     else if(res==='dump'){
       setSelectedOption(null)
       setqIndex(qIndex+1)
+      setDump(true)
+    }
+    else if(res==='review'){
+      if(setSelectedOption!=null){
+        setReviewAns(true)
+      }
+      else{
+        setReviewNotAns(true)
+      }
     }
     setResponse(res)
   }
-  console.log(response)
+  // console.log(response)
+  let colColor = 'bg-white-400'
+  if(answered){
+    colColor = 'bg-green-400'
+  }
+  else if(notAnswered){
+    colColor = 'bg-red-400'
+  }
+  else if(dump){
+    colColor = 'bg-gray-400'
+  }
+  else if(reviewAns){
+    colColor = 'bg-purple-400'
+  }
+  else if(reviewNotAns){
+    colColor = 'bg-yellow-400'
+  }
+
   
   
   const handleColClick = (col) =>{
@@ -106,7 +131,7 @@ const Tabsection = () => {
             <div className=" grid-container grid p-1 grid-cols-4">
               {Object.entries(section).map(([index, currentSection]) => (
                 <div
-                  className={`${colStyle}`}
+                  className={`${colStyle} ${colColor}`}
                   onClick={() => handleColClick(index)}
                   key={index}
                 >
@@ -169,7 +194,7 @@ const Tabsection = () => {
           </button>
           <button
             type="button"
-            onClick={() => handleResponse("rewiew")}
+            onClick={() => handleResponse("review")}
             className={`${buttonStyle} w-[130px]`}
           >
             review
@@ -198,7 +223,6 @@ const Tabsection = () => {
             onClick={
               qIndex < section.length - 1 ? () => handleResponse("next") : null
             }
-            // className={`${buttonStyle} w-[130px]`}
             className={
               qIndex >= section.length - 1
                 ? `${disabledBtn} w-[130px]`
