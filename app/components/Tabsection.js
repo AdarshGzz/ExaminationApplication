@@ -26,14 +26,16 @@ const Tabsection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5400/allque/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://exam-app-backend-tc8d.onrender.com/allque/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const Data = await response.json();
-        console.log("data" + Data);
         setSection(Data);
       } catch (error) {
         console.error(error);
@@ -41,8 +43,6 @@ const Tabsection = () => {
     };
     fetchData();
   }, []);
-
-  console.log("sec" + section);
 
   const handleAllQue = (sec) => {
     if (sec === "phyque") {
@@ -80,7 +80,6 @@ const Tabsection = () => {
     }
   };
 
-  console.log("reviews" + reviews);
   //
   const handleDumpClick = () => {
     let updatedDumps = [...dumps];
@@ -88,7 +87,6 @@ const Tabsection = () => {
     setDumps(updatedDumps);
   };
 
-  console.log("dumps :" + dumps);
   //
 
   const handleClearClick = () => {
@@ -97,10 +95,8 @@ const Tabsection = () => {
     updatedResponses[qIndex] = "";
     setUserResponses(updatedResponses);
   };
-  console.log(selectedOption);
-  console.log("userResponses : " + userResponses);
 
-  // console.log(qIndex)
+
 
   return (
     <div>
